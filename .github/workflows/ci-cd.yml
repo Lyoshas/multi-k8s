@@ -14,16 +14,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Download Google Cloud SDK (1/)
+      - name: Download Google Cloud SDK (1/2)
         run: curl https://sdk.cloud.google.com | bash > /dev/null;
-      - name: Download Google Cloud SDK (2/)
+      - name: Download Google Cloud SDK (2/2)
         run: source $HOME/google-cloud-sdk/path.bash.inc
-      - name: Install kubectl
+      # - name: Install kubectl
         # run: gcloud components update kubectl
-        run: sudo apt-get install kubectl
+        # run: sudo apt-get install kubectl
+      - name: Install kubectl (1/2)
+        run: curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+      - name: Install kubectl (2/2)
+        run: sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
       - name: Create Google Cloud authorization file
         run: echo "$GCLOUD_KEY_FILE_CONTENTS" > service-account.json
-      - name: Authorize to Google Cloud
+      - name: Log in to Google Cloud
         run: gcloud auth activate-service-account --key-file service-account.json
       - name: Switch to the correct project
         run: gcloud config set project healthy-display-371312
