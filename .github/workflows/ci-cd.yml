@@ -16,10 +16,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Download Google Cloud SDK (1/2)
-        run: curl https://sdk.cloud.google.com | bash > /dev/null;
-      - name: Download Google Cloud SDK (2/2)
-        run: source $HOME/google-cloud-sdk/path.bash.inc
+      - name: Install gcloud CLI (1/5)
+        run: sudo apt-get install apt-transport-https ca-certificates gnupg
+      - name: Install gcloud CLI (2/5)
+        run: echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
+      - name: Install gcloud CLI (3/5)
+        run: curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -
+      - name: Install gcloud CLI (4/5)
+        run: curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo tee /usr/share/keyrings/cloud.google.gpg
+      - name: Install gcloud CLI (5/5)
+        run: sudo apt-get update && sudo apt-get install google-cloud-cli
+      #   run: curl https://sdk.cloud.google.com | bash > /dev/null;
+      # - name: Download Google Cloud SDK (2/2)
+      #   run: source $HOME/google-cloud-sdk/path.bash.inc
       # - name: Install kubectl
         # run: gcloud components update kubectl
         # run: sudo apt-get install kubectl
