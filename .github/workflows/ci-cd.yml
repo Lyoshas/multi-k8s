@@ -37,6 +37,16 @@ jobs:
         run: gcloud config set compute/zone europe-central2-a
       - name: Specify a cluster
         run: gcloud container clusters get-credentials multi-cluster-2
+      - name: Install gke-gcloud-auth-plugin
+        run: gcloud components install gke-gcloud-auth-plugin
+      - name: Run kubectl with the new plugin (1/4)
+        run: export USE_GKE_GCLOUD_AUTH_PLUGIN=True
+      - name: Run kubectl with the new plugin (2/4)
+        run: source ~/.bashrc
+      - name: Run kubectl with the new plugin (3/4)
+        run: gcloud components update
+      - name: Run kubectl with the new plugin (4/4)
+        run: gcloud container clusters get-credentials multi-cluster-2
       - name: Log in to Docker Hub
         run: echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
       - name: Build the image
