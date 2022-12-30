@@ -71,7 +71,8 @@ jobs:
       - name: Run tests
         run: docker run -e CI=true lyoshas/react-test npm test
       - name: Create a variable that holds the value of the current git commit SHA
-        run: export GIT_SHA=$(git rev-parse HEAD)
+        run: echo "GIT_SHA=$(git rev-parse HEAD)" >> $GITHUB_ENV
+        # run: export GIT_SHA=$(git rev-parse HEAD)
       - name: Setup tmate session
         uses: mxschmitt/action-tmate@v3
       - name: Run a script that will deploy the project
