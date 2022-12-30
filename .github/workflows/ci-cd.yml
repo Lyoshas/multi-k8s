@@ -73,8 +73,8 @@ jobs:
       - name: Create a variable that holds the value of the current git commit SHA
         run: echo "GIT_SHA=$(git rev-parse HEAD)" >> $GITHUB_ENV
         # run: export GIT_SHA=$(git rev-parse HEAD)
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3
+      # - name: Setup tmate session
+      #   uses: mxschmitt/action-tmate@v3
       - name: Run a script that will deploy the project
         run: bash ./deploy.sh 
 
