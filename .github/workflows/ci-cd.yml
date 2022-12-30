@@ -38,7 +38,8 @@ jobs:
       - name: Specify a cluster
         run: gcloud container clusters get-credentials multi-cluster-2
       - name: Install gke-gcloud-auth-plugin
-        run: gcloud components install gke-gcloud-auth-plugin
+        run: sudo apt-get install google-cloud-sdk-gke-gcloud-auth-plugin
+        # run: gcloud components install gke-gcloud-auth-plugin
       - name: Run kubectl with the new plugin (1/4)
         run: export USE_GKE_GCLOUD_AUTH_PLUGIN=True
       - name: Run kubectl with the new plugin (2/4)
