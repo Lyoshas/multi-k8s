@@ -10,6 +10,7 @@ env:
   DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
   # make sure gcloud doesn't require any prompts
   CLOUDSDK_CORE_DISABLE_PROMPTS: 1
+  USE_GKE_GCLOUD_AUTH_PLUGIN: True
 
 jobs:
   test_and_deploy:
