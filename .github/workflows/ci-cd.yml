@@ -19,7 +19,8 @@ jobs:
       - name: Download Google Cloud SDK (2/)
         run: source $HOME/google-cloud-sdk/path.bash.inc
       - name: Install kubectl
-        run: gcloud components update kubectl
+        # run: gcloud components update kubectl
+        run: sudo apt-get install kubectl
       - name: Create Google Cloud authorization file
         run: echo "$GCLOUD_KEY_FILE_CONTENTS" > service-account.json
       - name: Authorize to Google Cloud
