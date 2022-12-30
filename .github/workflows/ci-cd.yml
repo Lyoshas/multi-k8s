@@ -1,0 +1,43 @@
+name: CI/CD workflow
+
+on:
+  push:
+    branches: [ main ]
+
+env:
+  GCLOUD_KEY_FILE_CONTENTS: ${{ secrets.GCLOUD_KEY_FILE_CONTENTS }}
+  # make sure gcloud doesn't require any prompts
+  CLOUDSDK_CORE_DISABLE_PROMPTS: 1
+
+jobs:
+  test_and_deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Download Google Cloud SDK (1/)
+        run: curl https://sdk.cloud.google.com | bash > /dev/null;
+      - name: Download Google Cloud SDK (2/)
+        run: source $HOME/google-cloud-sdk/path.bash.inc
+      - name: Install kubectl
+        run: gcloud components update kubectl
+      - name: Create Google Cloud authorization file
+        run: echo "$GCLOUD_KEY_FILE_CONTENTS" > service-account.json
+      - name: Authorize to Google Cloud
+        run: gcloud auth activate-service-account --key-file service-account.json
+      - name: Switch to the correct project
+        run: gcloud config set project healthy-display-371312
+      - name: Specify a compute zone
+        run: gcloud config set compute/zone europe-central2-a
+      - name: Specify a cluster
+        run: gcloud container clusters get-credentials multi-cluster-2
+      - name: Log in to Docker Hub
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+      - name: Build the image
+        run: docker build -t lyoshas/react-test -f ./client/Dockerfile.dev ./client
+      - name: Run tests
+        run: docker run -e CI=true lyoshas/react-test npm test
+      - name: Create a variable that holds the value of the current git commit SHA
+        run: export GIT_SHA=$(git rev-parse HEAD)
+      - name: Run a script that will deploy the project
+        run: bash ./deploy.sh 
+
