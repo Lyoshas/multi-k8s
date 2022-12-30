@@ -6,6 +6,8 @@ on:
 
 env:
   GCLOUD_KEY_FILE_CONTENTS: ${{ secrets.GCLOUD_KEY_FILE_CONTENTS }}
+  DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+  DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
   # make sure gcloud doesn't require any prompts
   CLOUDSDK_CORE_DISABLE_PROMPTS: 1
 
@@ -36,7 +38,7 @@ jobs:
       - name: Specify a cluster
         run: gcloud container clusters get-credentials multi-cluster-2
       - name: Log in to Docker Hub
-        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+        run: echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
       - name: Build the image
         run: docker build -t lyoshas/react-test -f ./client/Dockerfile.dev ./client
       - name: Run tests
